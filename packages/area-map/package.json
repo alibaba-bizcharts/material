@@ -1,0 +1,22 @@
+{
+  "name": "@bizcharts/area-map",
+  "version": "1.0.0",
+  "description": "Title of the mask",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ../../scripts/start.js area-map"
+  },
+  "blockConfig": {
+    "name": "@bizcharts/area-map",
+    "title": "热力图",
+    "categories": [
+      "LineChart",
+      "Plot"
+    ]
+  },
+  "author": "xiye.hjj",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.11"
+  }
+}
