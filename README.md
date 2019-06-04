@@ -1,18 +1,20 @@
+[English Documentation](./README_EN.md)
+
 # material-blocks
 
-This repository used to store bizcharts blcok material.
+这个仓库用来存放 bizcharts 区块物料。
 
-> block is an kind of react component, that used by classic scenes in our daily develop.
+> 区块指的是在业务场景下沉淀出来的组件。
 
-## How to create new block
+## 如何新增区块
 
 ```bash
 npm run add
 ```
 
-This command will generate an new directory upon *packages* dir which contains a lots of file that needed by block.
+这个命令执行后会在 *packages* 目录下新增一个新的目录
 
-## How to develop block
+## 如何开发区块
 
 ```
 cd packages/[block]
@@ -20,19 +22,11 @@ cd packages/[block]
 npm start
 ```
 
-## How to build block asset
+## 如何给区块打标
 
-```
-cd packages/[block]
+- 手动: 修改区块的 package.json 文件的 **blockConfig.categories** 字段.
+- 自动: 当你初始化区块的时候，程序会让你选择
 
-npm build
-```
+## 更新资源
 
-## How to add tag to block
-
-- manually: modify block's package.json file **blockConfig.categories** field.
-- automatic: When you publish block first time, you will be asked to fill the categories field.
-
-## Note
-
-Once the Merge request accepted by the maintainer, the new block will be compiled, and then show in the [block gallery area](bizcharts.net).
+一旦合并代码请求（MR）被仓库开发者接受，那么区块相关静态资源将会被自动更新到[区块列表页](bizcharts.net)
