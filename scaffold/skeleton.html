@@ -14,11 +14,7 @@
       rel="stylesheet"
       href="https://at.alicdn.com/t/font_1194735_5w6m12257eu.css"
     />
-    <link
-      rel="stylesheet"
-      data-name="vs/editor/editor.main"
-      href="https://g-assets.daily.taobao.net/bizcharts/cdn/0.0.1/editor.main.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.47.0/codemirror.min.css">
     <title>${title}</title>
   </head>
   <body>
@@ -28,10 +24,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.8.6/umd/react-dom.production.min.js"></script>
     <script src="http://unpkg.alibaba-inc.com/@alife/bizcharts@4.0.0-beta-01"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.17.0/min/vs/loader.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.17.0/min/vs/editor/editor.main.nls.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.17.0/min/vs/editor/editor.main.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.17.0/min/vs/basic-languages/javascript/javascript.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.47.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.47.0/mode/javascript/javascript.min.js"></script>
     <!-- You can add third-party library here  -->
+    <script>${umdCode}</script>
   </body>
 </html>

@@ -6,6 +6,7 @@ const write = require('write');
 const chokidar = require('chokidar');
 const browserSync = require('browser-sync').create();
 const babelParser = require("@babel/parser");
+const babelCore = require("@babel/core");
 const generate = require('@babel/generator').default;
 const Prism = require('prismjs');
 const prettier = require("prettier");
@@ -16,16 +17,7 @@ const jsxPath = `${pkgPath}/src/index.jsx`;
 const bodyTplPath = path.join(__dirname, `../templates/body.html`);
 const skeletonTplPath = `${pkgPath}/skeleton.html`;
 const reload = browserSync.reload;
-let unimportSDK = [];
-const officalSdk = ['react', 'react-dom', 'bizcharts', '@alife/bizcharts'];
-const umdMap = {
-  react: 'React',
-  'react-dom': 'ReactDOM',
-  'bizcharts': 'BizCharts',
-  '@alife/bizcharts': 'BizCharts'
-};
 const compile = () => {
-  unimportSDK = _.union(unimportSDK);
   const pkgJson = require(`${pkgPath}/package.json`);
   const jsCode = prettier.format(
     fs.readFileSync(jsxPath, { encoding: 'utf8' }),
@@ -40,12 +32,11 @@ const compile = () => {
     title: pkgJson.blockConfig.title,
     desc: pkgJson.description,
     categories: pkgJson.blockConfig.categories,
-    warningPkgs: unimportSDK.join(', '),
-    umdCode: umdCode.replace(/mountNode/g, 'document.getElementById("block-preview")')
   });
   const compiledSkeletonStr = _.template(skeletonStr)({
     body_str: compiledBodyStr,
-    title: pkgJson.blockConfig.title
+    title: pkgJson.blockConfig.title,
+    umdCode: umdCode.replace(/mountNode/g, 'document.getElementById("block-preview")')
   });
   write.sync(
     `${pkgPath}/umd/index.html`,
@@ -58,33 +49,21 @@ const compile = () => {
  * @param {String} code origin code
  */
 const transformCode = (code) => {
-  const ast = babelParser.parse(code, {
-    sourceType: "module",
+  const { code: umdCode} = babelCore.transform(code, {
+    presets: ["@babel/preset-env", "@babel/preset-react"],
     plugins: [
-      "jsx"
+      ["@babel/plugin-transform-modules-umd", {
+        "globals": {
+          "bizcharts": "BizCharts",
+          "react": "React",
+          "react-dom": "ReactDOM",
+          "_": "lodash",
+          "numeral": "numeral",
+        }
+      }]
     ]
   });
-  let prefixStr = '';
-  // remove `import` statement
-  _.remove(ast.program.body, (node) => {
-    if (node.type === 'ImportDeclaration') {
-      const importPkg = node.source.value;
-      if (node.specifiers.length > 1 || (node.specifiers.length === 1 && node.specifiers[0].type === 'ImportSpecifier')) {
-        // import { a, b, c } from "react" => const { a, b, c } = React;
-        prefixStr += `const { ${node.specifiers.map(spec => spec.imported.name).join(',')} } = ${umdMap[importPkg]}\n`;
-      } else {
-        // like import React from "react"
-        // nothing todo
-      }
-      if (!officalSdk.includes(importPkg)) {
-        unimportSDK.push(importPkg);
-      }
-      return true;
-    }
-  });
-  var { code } = generate(ast);
-  code = prefixStr + code;
-  return code;
+  return umdCode;
 }
 // generate html
 compile();

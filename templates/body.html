@@ -25,6 +25,10 @@
     height: 100vh;
     overflow: hidden;
   }
+  .CodeMirror {
+    height: 100%;
+    padding: 0 8px;
+  }
   #block-title {
     font-size: 24px;
     margin-bottom: 36px;
@@ -49,8 +53,9 @@
     position: relative;
     max-height: 500px;
     overflow: auto;
-    padding: 16px 32px;
+    padding: 16px;
     display: none;
+    font-size: 14px;
   }
   #block-code {
     margin: 0;
@@ -60,7 +65,7 @@
     bottom: calc(100% - 26px);
     float: right;
     cursor: pointer;
-    text-shadow: 0 1px 3px rgba(0,0,0,.6);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
   }
   #block-meta {
     width: 350px;
@@ -100,7 +105,7 @@
     width: 50vw;
     height: 100vh;
     overflow: auto;
-    border:1px solid grey;
+    border: 1px solid grey;
     border-right: none;
     position: relative;
   }
@@ -117,13 +122,13 @@
     right: 10px;
     top: 10px;
     cursor: pointer;
-    text-shadow: 0 1px 3px rgba(0,0,0,.6);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
   }
   #editor-code {
     width: 50vw;
     height: 100vh;
     overflow: auto;
-    border:1px solid grey;
+    border: 1px solid grey;
   }
 </style>
 <div id="block-title">${title}</div>
@@ -134,7 +139,9 @@
       <i class="iconfont icon-down"></i>
     </div>
     <div id="code-wrapper">
-      <pre id="block-code"><code class="language-javascript">${preview_code}</code></pre>
+      <pre
+        id="block-code"
+      ><code class="language-javascript">${preview_code}</code></pre>
       <i class="iconfont icon-fullscreen"></i>
     </div>
   </div>
@@ -157,55 +164,62 @@
   <div id="editor-code"></div>
 </div>
 <div id="code" style="display: none">${origin_code}</div>
-<script type="text/babel">
-  ${umdCode}
-</script>
 <script>
-  const warningPkgs = "${warningPkgs}";
-  if (warningPkgs.length) {
-    console.warn(
-      "检测到以下非官方包：",
-      warningPkgs,
-      "请确保在 skeleton.html 引入了这些包的 cdn 资源！"
+  // Expand code
+  var oCode = $("#code-wrapper");
+  var oEditor;
+  // Compile es6 code to umd code;
+  function compileToUmd(originCode) {
+    var result = Babel.transform(originCode, {
+      presets: ["es2015", "react"],
+      plugins: [
+        [
+          "transform-modules-umd",
+          {
+            globals: {
+              bizcharts: "BizCharts",
+              react: "React",
+              "react-dom": "ReactDOM",
+              _: "lodash",
+              numeral: "numeral"
+            }
+          }
+        ]
+      ]
+    });
+
+    return result.code.replace(
+      /mountNode/g,
+      'document.getElementById("preview-entity")'
     );
   }
-  // 展开代码
-  var oCode = $("#code-wrapper");
+  // Update preview
+  function updatePreview() {
+    var currentCode = oEditor.getValue();
+    var umdCode = compileToUmd(currentCode);
+    eval(umdCode);
+  }
+  // Show code
   $("#drop-down").click(() => {
     oCode.slideToggle(300);
   });
-  function onEditorContentChange(event) {
-    const newContent = monacoInstance.getValue();
-    evalCode(newContent);
-  }
-  function evalCode(code) {
-    code = code.replace(/import(.+)from\s+"bizcharts"/, "const $1 = BizCharts").replace(/mountNode/g, 'document.getElementById("preview-entity")');
-    $("#temp-eval").remove();
-    $("body").append('<script type="text/babel" id="temp-eval">' + code + '<\/script>');
-    Babel.transformScriptTags();
-  }
-  var monacoInstance;
-  // 展开代码编辑器
+  // Fullscreen the editor
   $(".icon-fullscreen").click(function() {
-    $("#editor-panel").addClass('show');
+    $("#editor-panel").addClass("show");
     $("body").addClass("noscroll");
     var code = decodeURIComponent($("#code").text());
-    var oEditor = document.querySelector("#editor-code");
-    console.log()
-    monacoInstance = monaco.editor.create(oEditor, {
+    oEditor = CodeMirror(document.querySelector("#editor-code"), {
       value: code,
-      language: 'javascript'
+      mode: "javascript"
     });
-
-    monacoInstance.onDidChangeModelContent(_.debounce(onEditorContentChange, 1000));
-    setTimeout(() => {
-      evalCode(code);
-    }, 100);
+    oEditor.on("change", _.debounce(updatePreview, 600));
+    // Compile when initialize
+    updatePreview();
   });
-  // 收起代码编辑器
+  // Collapse the editor
   $(".icon-mini").click(function() {
-    $("#editor-panel").removeClass('show');
+    $("#editor-panel").removeClass("show");
     $("body").removeClass("noscroll");
-    monacoInstance.dispose();
-  })
+    $("#editor-code").empty();
+  });
 </script>
