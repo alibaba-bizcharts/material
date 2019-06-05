@@ -15,6 +15,7 @@ const pkgName = process.argv.slice(0).pop();
 const pkgPath = path.join(__dirname, `../packages/${pkgName}`);
 const jsxPath = `${pkgPath}/src/index.jsx`;
 const bodyTplPath = path.join(__dirname, `../templates/body.html`);
+const styleTplPath = path.join(__dirname, `../templates/style.css`);
 const skeletonTplPath = `${pkgPath}/skeleton.html`;
 const reload = browserSync.reload;
 const compile = () => {
@@ -24,11 +25,13 @@ const compile = () => {
     { parser: "babel" }
   );
   const bodyStr = fs.readFileSync(bodyTplPath, { encoding: 'utf8' });
+  const styleStr = fs.readFileSync(styleTplPath, { encoding: 'utf8' });
   const skeletonStr = fs.readFileSync(skeletonTplPath, { encoding: 'utf8' });
   const umdCode = transformCode(jsCode);
   const compiledBodyStr = _.template(bodyStr)({
     origin_code: encodeURIComponent(jsCode),
     preview_code: Prism.highlight(jsCode, Prism.languages.javascript, 'javascript'),
+    style: styleStr,
     title: pkgJson.blockConfig.title,
     desc: pkgJson.description,
     categories: pkgJson.blockConfig.categories,
@@ -75,7 +78,7 @@ browserSync.init({
 
 // listen for file change
 const watchPath = [
-  path.join(__dirname, '../templates/body.html'),
+  path.join(__dirname, '../templates/'),
   `${pkgPath}/src/`,
   `${pkgPath}/skeleton.html`,
   `${pkgPath}/package.json`,

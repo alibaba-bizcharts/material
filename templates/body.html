@@ -1,135 +1,5 @@
 <style>
-  ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-    overflow: auto;
-  }
-  ::-webkit-scrollbar-thumb {
-    background-color: #e6e6e6;
-    min-height: 25px;
-    min-width: 25px;
-    border: 1px solid #e0e0e0;
-  }
-  ::-webkit-scrollbar-track {
-    background-color: #f7f7f7;
-    border: 1px solid #efefef;
-  }
-  body {
-    padding: 64px;
-    font-family: Source Sans Pro, Helvetica Neue, Arial, sans-serif !important;
-    color: #34495e;
-    -webkit-font-smoothing: antialiased;
-    line-height: 1.6rem;
-  }
-  .noscroll {
-    height: 100vh;
-    overflow: hidden;
-  }
-  .CodeMirror {
-    height: 100%;
-    padding: 0 8px;
-  }
-  #block-title {
-    font-size: 24px;
-    margin-bottom: 36px;
-  }
-  #block-info {
-    display: flex;
-    align-items: flex-start;
-  }
-  #block-view {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    border: 1px solid #e3e3e3;
-    margin-right: 24px;
-  }
-  #block-preview {
-    display: flex;
-    justify-content: center;
-  }
-  #code-wrapper {
-    position: relative;
-    max-height: 500px;
-    overflow: auto;
-    padding: 16px;
-    display: none;
-    font-size: 14px;
-  }
-  #block-code {
-    margin: 0;
-  }
-  .icon-fullscreen {
-    position: sticky;
-    bottom: calc(100% - 26px);
-    float: right;
-    cursor: pointer;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-  }
-  #block-meta {
-    width: 350px;
-    border: 1px solid #e3e3e3;
-    padding: 16px;
-  }
-  .block-tag {
-    border-radius: 4px;
-    background: #5d5df4;
-    color: #fff;
-    display: inline-block;
-    padding: 2px 12px;
-    margin-right: 8px;
-    font-size: 14px;
-  }
-  #drop-down {
-    display: flex;
-    justify-content: center;
-    cursor: pointer;
-  }
-  #block-desc {
-    margin-top: 24px;
-  }
-  #editor-panel {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: #fff;
-  }
-  #editor-panel.show {
-    display: flex;
-  }
-  #editor-preview {
-    width: 50vw;
-    height: 100vh;
-    overflow: auto;
-    border: 1px solid grey;
-    border-right: none;
-    position: relative;
-  }
-  #preview-entity {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-    overflow: auto;
-  }
-  .icon-mini {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    cursor: pointer;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-  }
-  #editor-code {
-    width: 50vw;
-    height: 100vh;
-    overflow: auto;
-    border: 1px solid grey;
-  }
+  ${style}
 </style>
 <div id="block-title">${title}</div>
 <div id="block-info">
@@ -162,6 +32,14 @@
     <i class="iconfont icon-mini"></i>
   </div>
   <div id="editor-code"></div>
+  <button id="dep-inject">依赖注入</button>
+  <div id="inject-toast"><i class="iconfont icon-sucess"></i>注入成功！你可以在代码中使用相关全局变量</div>
+  <div id="inject-dialog">
+    <div>
+      <input type="text" placeholder="比如 https://unpkg.com/react@16.8.6/umd/react.production.min.js " id="link">
+    </div>
+    <div id="inject-sure"><button>确定</button></div>
+  </div>
 </div>
 <div id="code" style="display: none">${origin_code}</div>
 <script>
@@ -222,4 +100,28 @@
     $("body").removeClass("noscroll");
     $("#editor-code").empty();
   });
+  // Show dependency inject dialog
+  $("#dep-inject").click(function() {
+    $("#inject-dialog").toggle();
+  });
+  // Start inject
+  $("#inject-sure").click(function() {
+    var iLink = $("#link").val();
+    if (!iLink) return;
+
+    $.ajax({
+      url: iLink,
+      dataType: 'script',
+      success: function() {
+        $("#inject-toast").show();
+        $("#link").val("");
+        setTimeout(() => {
+          $("#inject-toast").hide();
+        }, 3000);
+      },
+      async: true
+    });
+
+    $("#inject-dialog").hide();
+  })
 </script>
