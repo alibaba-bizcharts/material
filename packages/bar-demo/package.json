@@ -1,10 +1,10 @@
 {
-  "name": "@bizcharts/area-demo",
+  "name": "@bizcharts/bar-demo",
   "version": "0.0.2",
-  "description": "测试111",
+  "description": "柱状图测试",
   "main": "index.js",
   "scripts": {
-    "start": "node ../../scripts/start.js area-demo"
+    "start": "node ../../scripts/start.js bar-demo"
   },
   "author": "xiye.hjj",
   "license": "ISC",
@@ -12,15 +12,15 @@
     "lodash": "^4.17.11"
   },
   "blockConfig": {
-    "name": "@bizcharts/area-demo",
+    "name": "@bizcharts/bar-demo",
     "title": "这是个测试",
     "categories": [
       "bizcharts-plot",
       "bizcharts4.x",
-      "AreaChart"
+      "BarChart"
     ],
-    "screenshot": "https://img.alicdn.com/tfs/TB1PMswc2WG3KVjSZPcXXbkbXXa-1040-740.png"
+    "screenshot": "https://img.alicdn.com/tfs/TB1xsM8cW1s3KVjSZFAXXX_ZXXa-1040-740.png"
   },
-  "title": "这是个测试",
+  "title": "柱状图",
   "homepage": "http://bizcharts.net/products/bizCharts/demo/detail?id=line-series&from=ice"
 }
