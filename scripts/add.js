@@ -42,9 +42,9 @@ inquirer
     const pkgJson = jsonfile.readFileSync(pgkJsonPath);
     pkgJson.name = `@bizcharts/${packageName}`;
     pkgJson.description = description;
-    pkgJson.blockConfig.title = title;
+    pkgJson.blockConfig.title = pkgJson.title = title;
     pkgJson.blockConfig.name = pkgJson.name;
-    pkgJson.blockConfig.categories = categories.split(' ');
+    pkgJson.blockConfig.categories = pkgJson.blockConfig.categories.concat(categories.split(' '));
     pkgJson.scripts.start = `node ../../scripts/start.js ${packageName}`;
     jsonfile.writeFileSync(pgkJsonPath, pkgJson, { spaces: 2, EOL: '\r\n' });
     signale.success(`add ${packageName} upon packages/`);

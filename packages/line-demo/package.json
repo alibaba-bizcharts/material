@@ -1,0 +1,27 @@
+{
+  "name": "@bizcharts/line-demo",
+  "version": "0.1.6",
+  "description": "哈哈哈哈哈哈哈哈哈哈哈",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ../../scripts/start.js line-demo"
+  },
+  "author": "xiye.hjj",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.11"
+  },
+  "blockConfig": {
+    "name": "@bizcharts/line-demo",
+    "title": "折线图测试",
+    "categories": [
+      "bizcharts-plot",
+      "bizcharts4.x",
+      "LineChart",
+      "BarChart"
+    ],
+    "screenshot": "https://img.alicdn.com/tfs/TB1TpwAc8aE3KVjSZLeXXXsSFXa-1040-740.png"
+  },
+  "title": "折线图测试",
+  "homepage": "http://bizcharts.net/products/bizCharts/demo/detail?id=line-series&from=ice"
+}

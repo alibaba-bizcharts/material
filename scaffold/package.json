@@ -1,18 +1,21 @@
 {
   "name": "",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "bizcharts material warehouse.",
   "main": "index.js",
   "scripts": {
-  },
-  "blockConfig": {
-    "name": "",
-    "title": "",
-    "categories": []
   },
   "author": "xiye.hjj",
   "license": "ISC",
   "dependencies": {
     "lodash": "^4.17.11"
-  }
+  },
+  "blockConfig": {
+    "name": "",
+    "title": "",
+    "categories": ["bizcharts-plot", "bizcharts4.x"],
+    "screenshot": "https://img.alicdn.com/tfs/TB1M43.bCWD3KVjSZSgXXcCxVXa-1692-784.png"
+  },
+  "title": "折线图+辅助线",
+  "homepage": "http://bizcharts.net/products/bizCharts/demo/detail?id=line-series&from=ice"
 }

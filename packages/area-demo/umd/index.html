@@ -1,0 +1,490 @@
+<!-- Material skeleton file -->
+<!-- You can custom each block case by case -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://at.alicdn.com/t/font_1194735_cqitr50gad4.css"
+    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.47.0/codemirror.min.css">
+    <title>这是个测试</title>
+  </head>
+  <body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <style>
+  ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+  overflow: auto;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #e6e6e6;
+  min-height: 25px;
+  min-width: 25px;
+  border: 1px solid #e0e0e0;
+}
+::-webkit-scrollbar-track {
+  background-color: #f7f7f7;
+  border: 1px solid #efefef;
+}
+body {
+  padding: 64px;
+  font-family: Source Sans Pro, Helvetica Neue, Arial, sans-serif !important;
+  color: #34495e;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.6rem;
+}
+.noscroll {
+  height: 100vh;
+  overflow: hidden;
+}
+.CodeMirror {
+  height: 100%;
+  padding: 0 8px;
+}
+#block-title {
+  font-size: 24px;
+  margin-bottom: 36px;
+}
+#block-info {
+  display: flex;
+  align-items: flex-start;
+}
+#block-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 1px solid #e3e3e3;
+  margin-right: 24px;
+}
+#block-preview {
+  display: flex;
+  justify-content: center;
+}
+#code-wrapper {
+  position: relative;
+  max-height: 500px;
+  overflow: auto;
+  padding: 16px;
+  display: none;
+  font-size: 14px;
+}
+#block-code {
+  margin: 0;
+}
+.icon-fullscreen {
+  position: sticky;
+  bottom: calc(100% - 26px);
+  float: right;
+  cursor: pointer;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+#block-meta {
+  width: 350px;
+  border: 1px solid #e3e3e3;
+  padding: 16px;
+}
+.block-tag {
+  border-radius: 4px;
+  background: #5d5df4;
+  color: #fff;
+  display: inline-block;
+  padding: 2px 12px;
+  margin-right: 8px;
+  font-size: 14px;
+}
+#drop-down {
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+}
+#block-desc {
+  margin-top: 24px;
+}
+#editor-panel {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #fff;
+}
+#editor-panel.show {
+  display: flex;
+}
+#editor-preview {
+  width: 50vw;
+  height: 100vh;
+  overflow: auto;
+  border: 1px solid grey;
+  border-right: none;
+  position: relative;
+}
+#preview-entity {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+}
+.icon-mini {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  cursor: pointer;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+#editor-code {
+  width: 50vw;
+  height: 100vh;
+  overflow: auto;
+  border: 1px solid grey;
+}
+#dep-inject {
+  position: fixed;
+  right: 20px;
+  top: 10px;
+  z-index: 9;
+  cursor: pointer;
+}
+#inject-dialog {
+  position: fixed;
+  z-index: 9;
+  display: none;
+  padding: 9px;
+  font-size: 12px;
+  top: 40px;
+  right: 20px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .16);
+}
+
+#inject-dialog input {
+  width: 200px;
+  height: 24px;
+  line-height: 24px;
+}
+#inject-sure {
+  text-align: right;
+  margin-top: 4px;
+}
+#inject-toast {
+  position: fixed;
+  left: 50%;
+  top: 40px;
+  z-index: 10;
+  font-size: 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .16);
+  transform: translate(-50%, -50%);
+  display: none;
+  background: #fff;
+  padding: 0 12px;
+  border-radius: 4px;
+  height: 28px;
+  line-height: 28px;
+}
+.icon-sucess {
+  color: #49d049;
+  margin-right: 4px;
+}
+.icon-sucess::before {
+  font-size: 14px;
+}
+</style>
+<div id="block-title">这是个测试</div>
+<div id="block-info">
+  <div id="block-view">
+    <div id="block-preview"></div>
+    <div id="drop-down">
+      <i class="iconfont icon-down"></i>
+    </div>
+    <div id="code-wrapper">
+      <pre
+        id="block-code"
+      ><code class="language-javascript"><span class="token keyword">import</span> <span class="token punctuation">{</span> LineChart <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">"bizcharts"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> data <span class="token operator">=</span> <span class="token punctuation">[</span>
+  <span class="token punctuation">{</span>
+    year<span class="token punctuation">:</span> <span class="token string">"1991"</span><span class="token punctuation">,</span>
+    value<span class="token punctuation">:</span> <span class="token number">13</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span>
+    year<span class="token punctuation">:</span> <span class="token string">"1992"</span><span class="token punctuation">,</span>
+    value<span class="token punctuation">:</span> <span class="token number">24</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span>
+    year<span class="token punctuation">:</span> <span class="token string">"1993"</span><span class="token punctuation">,</span>
+    value<span class="token punctuation">:</span> <span class="token number">3.5</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span>
+    year<span class="token punctuation">:</span> <span class="token string">"1994"</span><span class="token punctuation">,</span>
+    value<span class="token punctuation">:</span> <span class="token number">5</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span>
+    year<span class="token punctuation">:</span> <span class="token string">"1995"</span><span class="token punctuation">,</span>
+    value<span class="token punctuation">:</span> <span class="token number">4.9</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span>
+    year<span class="token punctuation">:</span> <span class="token string">"1996"</span><span class="token punctuation">,</span>
+    value<span class="token punctuation">:</span> <span class="token number">6</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span>
+    year<span class="token punctuation">:</span> <span class="token string">"1997"</span><span class="token punctuation">,</span>
+    value<span class="token punctuation">:</span> <span class="token number">7</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span>
+    year<span class="token punctuation">:</span> <span class="token string">"1998"</span><span class="token punctuation">,</span>
+    value<span class="token punctuation">:</span> <span class="token number">9</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">{</span>
+    year<span class="token punctuation">:</span> <span class="token string">"1999"</span><span class="token punctuation">,</span>
+    value<span class="token punctuation">:</span> <span class="token number">13</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+<span class="token keyword">class</span> <span class="token class-name">Demo</span> <span class="token keyword">extends</span> <span class="token class-name">React<span class="token punctuation">.</span>Component</span> <span class="token punctuation">{</span>
+  <span class="token function">render</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token punctuation">(</span>
+      <span class="token operator">&lt;</span>LineChart
+        data<span class="token operator">=</span><span class="token punctuation">{</span>data<span class="token punctuation">}</span>
+        xField<span class="token operator">=</span><span class="token string">"year"</span>
+        yField<span class="token operator">=</span><span class="token string">"value"</span>
+        height<span class="token operator">=</span><span class="token punctuation">{</span><span class="token number">350</span><span class="token punctuation">}</span>
+        width<span class="token operator">=</span><span class="token punctuation">{</span><span class="token number">500</span><span class="token punctuation">}</span>
+      <span class="token operator">/</span><span class="token operator">></span>
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+ReactDOM<span class="token punctuation">.</span><span class="token function">render</span><span class="token punctuation">(</span><span class="token operator">&lt;</span>Demo <span class="token operator">/</span><span class="token operator">></span><span class="token punctuation">,</span> mountNode<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+      <i class="iconfont icon-fullscreen"></i>
+    </div>
+  </div>
+  <div id="block-meta">
+    <p>基本信息：</p>
+    <p>
+      所属分类：<span
+        class="block-tag"
+        >bizcharts-plot</span
+      ><span
+        class="block-tag"
+        >bizcharts4.x</span
+      ><span
+        class="block-tag"
+        >AreaChart</span
+      >
+    </p>
+  </div>
+</div>
+<div id="block-desc">测试111</div>
+<div id="editor-panel">
+  <div id="editor-preview">
+    <div id="preview-entity"></div>
+    <i class="iconfont icon-mini"></i>
+  </div>
+  <div id="editor-code"></div>
+  <button id="dep-inject">依赖注入</button>
+  <div id="inject-toast"><i class="iconfont icon-sucess"></i>注入成功！你可以在代码中使用相关全局变量</div>
+  <div id="inject-dialog">
+    <div>
+      <input type="text" placeholder="比如 https://unpkg.com/react@16.8.6/umd/react.production.min.js " id="link">
+    </div>
+    <div id="inject-sure"><button>确定</button></div>
+  </div>
+</div>
+<div id="code" style="display: none">import%20%7B%20LineChart%20%7D%20from%20%22bizcharts%22%3B%0A%0Aconst%20data%20%3D%20%5B%0A%20%20%7B%0A%20%20%20%20year%3A%20%221991%22%2C%0A%20%20%20%20value%3A%2013%0A%20%20%7D%2C%0A%20%20%7B%0A%20%20%20%20year%3A%20%221992%22%2C%0A%20%20%20%20value%3A%2024%0A%20%20%7D%2C%0A%20%20%7B%0A%20%20%20%20year%3A%20%221993%22%2C%0A%20%20%20%20value%3A%203.5%0A%20%20%7D%2C%0A%20%20%7B%0A%20%20%20%20year%3A%20%221994%22%2C%0A%20%20%20%20value%3A%205%0A%20%20%7D%2C%0A%20%20%7B%0A%20%20%20%20year%3A%20%221995%22%2C%0A%20%20%20%20value%3A%204.9%0A%20%20%7D%2C%0A%20%20%7B%0A%20%20%20%20year%3A%20%221996%22%2C%0A%20%20%20%20value%3A%206%0A%20%20%7D%2C%0A%20%20%7B%0A%20%20%20%20year%3A%20%221997%22%2C%0A%20%20%20%20value%3A%207%0A%20%20%7D%2C%0A%20%20%7B%0A%20%20%20%20year%3A%20%221998%22%2C%0A%20%20%20%20value%3A%209%0A%20%20%7D%2C%0A%20%20%7B%0A%20%20%20%20year%3A%20%221999%22%2C%0A%20%20%20%20value%3A%2013%0A%20%20%7D%0A%5D%3B%0A%0Aclass%20Demo%20extends%20React.Component%20%7B%0A%20%20render()%20%7B%0A%20%20%20%20return%20(%0A%20%20%20%20%20%20%3CLineChart%0A%20%20%20%20%20%20%20%20data%3D%7Bdata%7D%0A%20%20%20%20%20%20%20%20xField%3D%22year%22%0A%20%20%20%20%20%20%20%20yField%3D%22value%22%0A%20%20%20%20%20%20%20%20height%3D%7B350%7D%0A%20%20%20%20%20%20%20%20width%3D%7B500%7D%0A%20%20%20%20%20%20%2F%3E%0A%20%20%20%20)%3B%0A%20%20%7D%0A%7D%0A%0AReactDOM.render(%3CDemo%20%2F%3E%2C%20mountNode)%3B%0A</div>
+<script>
+  // Expand code
+  var oCode = $("#code-wrapper");
+  var oEditor;
+  // Compile es6 code to umd code;
+  function compileToUmd(originCode) {
+    var result = Babel.transform(originCode, {
+      presets: ["es2015", "react"],
+      plugins: [
+        [
+          "transform-modules-umd",
+          {
+            globals: {
+              bizcharts: "BizCharts",
+              react: "React",
+              "react-dom": "ReactDOM",
+              _: "lodash",
+              numeral: "numeral"
+            }
+          }
+        ]
+      ]
+    });
+
+    return result.code.replace(
+      /mountNode/g,
+      'document.getElementById("preview-entity")'
+    );
+  }
+  // Update preview
+  function updatePreview() {
+    var currentCode = oEditor.getValue();
+    var umdCode = compileToUmd(currentCode);
+    eval(umdCode);
+  }
+  // Show code
+  $("#drop-down").click(() => {
+    oCode.slideToggle(300);
+  });
+  // Fullscreen the editor
+  $(".icon-fullscreen").click(function() {
+    $("#editor-panel").addClass("show");
+    $("body").addClass("noscroll");
+    var code = decodeURIComponent($("#code").text());
+    oEditor = CodeMirror(document.querySelector("#editor-code"), {
+      value: code,
+      mode: "javascript"
+    });
+    oEditor.on("change", _.debounce(updatePreview, 600));
+    // Compile when initialize
+    updatePreview();
+  });
+  // Collapse the editor
+  $(".icon-mini").click(function() {
+    $("#editor-panel").removeClass("show");
+    $("body").removeClass("noscroll");
+    $("#editor-code").empty();
+  });
+  // Show dependency inject dialog
+  $("#dep-inject").click(function() {
+    $("#inject-dialog").toggle();
+  });
+  // Start inject
+  $("#inject-sure").click(function() {
+    var iLink = $("#link").val();
+    if (!iLink) return;
+
+    $.ajax({
+      url: iLink,
+      dataType: 'script',
+      success: function() {
+        $("#inject-toast").show();
+        $("#link").val("");
+        setTimeout(() => {
+          $("#inject-toast").hide();
+        }, 3000);
+      },
+      async: true
+    });
+
+    $("#inject-dialog").hide();
+  })
+</script>
+    <script src="https://unpkg.com/react@16.8.6/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.8.6/umd/react-dom.production.min.js"></script>
+    <script src="http://unpkg.alibaba-inc.com/@alife/bizcharts@4.0.0-beta-01"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.47.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.47.0/mode/javascript/javascript.min.js"></script>
+    <!-- You can add third-party library here  -->
+    <script>(function (global, factory) {
+  if (typeof define === "function" && define.amd) {
+    define(["bizcharts"], factory);
+  } else if (typeof exports !== "undefined") {
+    factory(require("bizcharts"));
+  } else {
+    var mod = {
+      exports: {}
+    };
+    factory(global.BizCharts);
+    global.unknown = mod.exports;
+  }
+})(this, function (_bizcharts) {
+  "use strict";
+
+  function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+  function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+  function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+  function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+  function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+  function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+  function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+  function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+  var data = [{
+    year: "1991",
+    value: 13
+  }, {
+    year: "1992",
+    value: 24
+  }, {
+    year: "1993",
+    value: 3.5
+  }, {
+    year: "1994",
+    value: 5
+  }, {
+    year: "1995",
+    value: 4.9
+  }, {
+    year: "1996",
+    value: 6
+  }, {
+    year: "1997",
+    value: 7
+  }, {
+    year: "1998",
+    value: 9
+  }, {
+    year: "1999",
+    value: 13
+  }];
+
+  var Demo =
+  /*#__PURE__*/
+  function (_React$Component) {
+    _inherits(Demo, _React$Component);
+
+    function Demo() {
+      _classCallCheck(this, Demo);
+
+      return _possibleConstructorReturn(this, _getPrototypeOf(Demo).apply(this, arguments));
+    }
+
+    _createClass(Demo, [{
+      key: "render",
+      value: function render() {
+        return React.createElement(_bizcharts.LineChart, {
+          data: data,
+          xField: "year",
+          yField: "value",
+          height: 350,
+          width: 500
+        });
+      }
+    }]);
+
+    return Demo;
+  }(React.Component);
+
+  ReactDOM.render(React.createElement(Demo, null), document.getElementById("block-preview"));
+});</script>
+  </body>
+</html>
